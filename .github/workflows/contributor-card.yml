@@ -1,0 +1,42 @@
+name: PR Merge Comment
+
+on:
+  pull_request:
+#    types: [closed]
+    types: [opened]
+
+jobs:
+  post-pr-opened-comment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get and Format Username
+      run: |
+        formatted_username=$(echo "${{ github.event.pull_request.user.login }}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
+        echo "FORMATTED_USERNAME=$formatted_username" >> $GITHUB_ENV
+
+    - name: Download image
+      run: |
+        curl -o downloaded_image.png https://example.com/path/to/image.png
+
+    - name: Create Comment
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { github, context } = require('@actions/github');
+          const prUser = process.env.FORMATTED_USERNAME;
+          const url = `https://datahub-contributor-cards.vercel.app/${prUser}`;
+          const body = `![Image](downloaded_image.png)\n\n@${prUser} Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
+          github.rest.issues.createComment({
+            ...context.repo,
+            issue_number: context.payload.pull_request.number,
+            body: body
+          });
+
+#    - name: Upload image to comment
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: downloaded_image
+#        path: downloaded_image.png
