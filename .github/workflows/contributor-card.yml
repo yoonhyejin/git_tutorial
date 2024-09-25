@@ -18,6 +18,12 @@ jobs:
           formatted_username=$(echo "${{ github.event.pull_request.user.login }}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
           echo "FORMATTED_USERNAME=$formatted_username" >> $GITHUB_ENV
 
+      - name: Download Contributor Image
+        run: |
+          curl -L "https://datahub-contributor-cards.vercel.app/api/og?userId=${{ github.event.pull_request.user.login }}" --output downloaded_image.png
+        if: github.event_name == 'pull_request'  # Only runs for pull requests
+
+
       - name: Create Comment (PR only)
         if: github.event_name == 'pull_request'  # Only runs for pull requests
         uses: actions/github-script@v6
