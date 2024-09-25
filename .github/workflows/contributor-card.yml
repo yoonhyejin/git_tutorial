@@ -1,44 +1,31 @@
 name: PR Merge Comment
 
-on: [pull_request, push, issues]
+on: [pull_request, push]
 
 jobs:
-  build:
+  post-pr-opened-comment:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    - name: Run a multi-line script
+    - name: Get and Format Username
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
-#  post-pr-opened-comment:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: Checkout repository
-#      uses: actions/checkout@v3
-#
-#    - name: Get and Format Username
-#      run: |
-#        formatted_username=$(echo "${{ github.event.pull_request.user.login }}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
-#        echo "FORMATTED_USERNAME=$formatted_username" >> $GITHUB_ENV
-#
-#    - name: Create Comment
-#      uses: actions/github-script@v6
-#      with:
-#        script: |
-#          const prUser = process.env.FORMATTED_USERNAME;
-#          const url = `https://datahub-contributor-cards.vercel.app/${prUser}`;
-#          const body = `![Image](downloaded_image.png)\n\n@${prUser} Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
-#
-#          // Create a comment on the PR
-#          await github.rest.issues.createComment({
-#            owner: context.repo.owner,
-#            repo: context.repo.repo,
-#            issue_number: context.payload.pull_request.number,
-#            body: body
-#          });
+        formatted_username=$(echo "${{ github.event.pull_request.user.login }}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
+        echo "FORMATTED_USERNAME=$formatted_username" >> $GITHUB_ENV
+
+    - name: Create Comment
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const prUser = process.env.FORMATTED_USERNAME;
+          const url = `https://datahub-contributor-cards.vercel.app/${prUser}`;
+          const body = `![Image](downloaded_image.png)\n\n@${prUser} Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
+          
+          // Create a comment on the PR
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            body: body
+          });
