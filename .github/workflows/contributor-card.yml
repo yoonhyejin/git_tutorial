@@ -18,12 +18,6 @@ jobs:
           formatted_username=$(echo "${{ github.event.pull_request.user.login }}" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
           echo "FORMATTED_USERNAME=$formatted_username" >> $GITHUB_ENV
 
-      - name: Download Contributor Image
-        run: |
-          curl -L "https://datahub-contributor-cards.vercel.app/api/og?userId=${{ github.event.pull_request.user.login }}" --output downloaded_image.png
-        if: github.event_name == 'pull_request'  # Only runs for pull requests
-
-
       - name: Create Comment (PR only)
         if: github.event_name == 'pull_request'  # Only runs for pull requests
         uses: actions/github-script@v6
@@ -32,7 +26,7 @@ jobs:
             if (context.payload.pull_request) {
               const prUser = process.env.FORMATTED_USERNAME;
               const url = `https://datahub-contributor-cards.vercel.app/${prUser}`;
-              const body = `![Image](downloaded_image.png)\n\n@${prUser} Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
+              const body = `![Image](https://datahub-contributor-cards.vercel.app/api/og?userId=${{ github.event.pull_request.user.login }})\n\n@${prUser} Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
               
               // Create a comment on the PR
               await github.rest.issues.createComment({
