@@ -2,7 +2,7 @@ name: PR Merge Comment
 
 on:
   pull_request:
-    types: [opened]
+    branches: [ main ]
 
 jobs:
   post-pr-opened-comment:
