@@ -2,8 +2,7 @@ name: PR Merge Comment
 
 on:
   pull_request:
-    types: [opened, synchronize]
-  push:
+    types: [closed]
 
 jobs:
   post-pr-opened-comment:
