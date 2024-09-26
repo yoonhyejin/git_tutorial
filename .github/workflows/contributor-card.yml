@@ -25,7 +25,7 @@ jobs:
             if (context.payload.pull_request) {
               const prUser = process.env.FORMATTED_USERNAME;
               const url = `https://datahub-contributor-cards.vercel.app/${prUser}`;
-              const body = `![Image](https://datahub-contributor-cards.vercel.app/api/og?userId=${{ github.event.pull_request.user.login }})\n\n@${prUser} Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
+              const body = `![Image](https://datahub-contributor-cards.vercel.app/api/og?userId=${{ github.event.pull_request.user.login }})\n\n Hello @${prUser} :smile: Thank you for opening a pull request!\nVisit your page here: [${url}](${url})`;
               
               // Create a comment on the PR
               await github.rest.issues.createComment({
