@@ -1,10 +1,9 @@
 name: PR Merge Comment
 
 on:
-  push:
-    branches:
-      - master
-g
+  pull_request:
+    types: [opened]
+
 jobs:
   post-pr-opened-comment:
     runs-on: ubuntu-latest
