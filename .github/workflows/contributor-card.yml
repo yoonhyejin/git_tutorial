@@ -2,8 +2,8 @@ name: PR Merge Comment
 
 on:
   pull_request:
-    types: [opened, synchronize]  # Triggers for any pull request event
-  push:  # Triggers for any push to any branch
+    types: [opened, synchronize]
+  push:
 
 jobs:
   post-pr-opened-comment:
